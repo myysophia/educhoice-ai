@@ -1,6 +1,8 @@
 from vanna.base import VannaBase
 from vanna.chromadb import ChromaDB_VectorStore
 from vanna.openai import OpenAI_Chat
+from vanna.qianwen import QianWenAI_Chat
+
 from vanna.flask import VannaFlaskApp
 import yaml
 import os
@@ -12,10 +14,15 @@ def load_config():
 
 config = load_config()
 
-class MyVanna(ChromaDB_VectorStore, OpenAI_Chat):
+# class MyVanna(ChromaDB_VectorStore, OpenAI_Chat):
+#     def __init__(self, config=None):
+#         ChromaDB_VectorStore.__init__(self, config=config)
+#         OpenAI_Chat.__init__(self, config=config)
+
+class MyVanna(ChromaDB_VectorStore, QianWenAI_Chat):
     def __init__(self, config=None):
         ChromaDB_VectorStore.__init__(self, config=config)
-        OpenAI_Chat.__init__(self, config=config)
+        QianWenAI_Chat.__init__(self, config=config)
 
 vn = MyVanna(config={'api_key': config['openai']['api_key'], 'model': config['openai']['model']})
 
