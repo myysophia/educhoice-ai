@@ -1,5 +1,5 @@
 # 构建阶段
-FROM python:3.13-alpine AS builder
+FROM python:3.11-slim-bullseye AS builder
 
 WORKDIR /build
 
@@ -22,7 +22,7 @@ RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 RUN pip install --no-cache-dir --user -r requirements.txt
 
 # 运行阶段
-FROM python:3.13-alpine
+FROM python:3.11-slim-bullseye
 
 WORKDIR /app
 
