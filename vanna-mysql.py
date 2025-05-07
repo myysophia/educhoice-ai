@@ -1,3 +1,8 @@
+import logging  
+import os  
+from datetime import datetime  
+from flask import request  
+import json  
 from vanna.base import VannaBase
 from vanna.chromadb import ChromaDB_VectorStore
 from vanna.openai import OpenAI_Chat
@@ -6,6 +11,9 @@ from vanna.qianwen import QianWenAI_Chat
 from vanna.flask import VannaFlaskApp
 import yaml
 import os
+
+logging.basicConfig(level=logging.INFO)  
+
 
 def load_config():
     config_path = os.path.join(os.path.dirname(__file__), 'config.yaml')
@@ -412,16 +420,80 @@ training_data
 # vn.remove_training_data(id='1-ddl')
 
 # vn.ask(question="西安交通大学2024年理科录取分数?")
-app = VannaFlaskApp(vn,
-                    chart=False,
-                    title=" Welcome come to EDU Choice ",
-                    subtitle="Your AI-powered copilot for EDU Choice",
-                    summarization=False,
-                    ask_results_correct=False,
-                    debug=True,
-                    sql=False,
-                    suggested_questions=True,
-                    show_training_data=False,
-                    function_generation=True
-                    )
-app.run()
+  
+# 设置基本日志配置  
+logging.basicConfig(  
+    filename='vanna_app.log',  
+    level=logging.INFO,  
+    format='%(asctime)s - %(levelname)s - %(message)s'  
+)  
+  
+# 创建logs目录  
+os.makedirs('logs', exist_ok=True)  
+  
+class LoggingVannaFlaskApp(VannaFlaskApp):  
+    def __init__(self, *args, **kwargs):  
+        super().__init__(*args, **kwargs)  
+          
+        # 添加请求拦截器  
+        @self.flask_app.before_request  
+        def log_request():  
+            if request.path == '/api/v0/generate_sql':  
+                question = request.args.get('question')  
+                if question:  
+                    log_message = f"[{datetime.now()}] Question: {question}"  
+                      
+                    # 控制台日志  
+                    print(log_message)  
+                      
+                    # 文件日志  
+                    with open('logs/vanna_queries.log', 'a') as f:  
+                        f.write(log_message + '\n')  
+                      
+                    # Python日志  
+                    logging.info(f"Question: {question}")  
+          
+        # 添加响应拦截器  
+        @self.flask_app.after_request  
+        def log_response(response):  
+            if request.path == '/api/v0/generate_sql':  
+                try:  
+                    # 克隆响应以避免消耗它  
+                    response_clone = response.get_data(as_text=True)  
+                    response_data = json.loads(response_clone)  
+                      
+                    if response_data and response_data.get('type') == 'sql':  
+                        sql = response_data.get('text')  
+                        log_message = f"[{datetime.now()}] SQL: {sql}"  
+                          
+                        # 控制台日志  
+                        print(log_message)  
+                          
+                        # 文件日志  
+                        with open('logs/vanna_queries.log', 'a') as f:  
+                            f.write(log_message + '\n')  
+                          
+                        # Python日志  
+                        logging.info(f"SQL: {sql}")  
+                except Exception as e:  
+                    print(f"Error logging response: {e}")  
+                    logging.error(f"Error logging response: {e}")  
+              
+            return response  
+  
+# 使用修改后的类  
+app = LoggingVannaFlaskApp(vn,  
+                chart=False,  
+                title="Welcome to EDU Choice",  
+                subtitle="Your AI-powered copilot for EDU Choice",  
+                summarization=False,  
+                ask_results_correct=False,  
+                debug=True,  # 这个设置Vanna的debug，不是Flask的  
+                sql=False,  
+                suggested_questions=True,  
+                show_training_data=False,  
+                function_generation=True  
+                )  
+  
+# 显式设置Flask的debug模式  
+app.run(host="0.0.0.0", port=8084, debug=True)
