@@ -10,8 +10,8 @@ RUN apk add --no-cache \
     python3-dev \
     libffi-dev \
     openssl-dev \
-    rust \    # 添加 Rust
-    cargo     # 添加 Cargo
+    rust \
+    cargo
 
 # 复制依赖文件
 COPY requirements.txt .
