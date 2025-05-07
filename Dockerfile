@@ -9,10 +9,14 @@ RUN apk add --no-cache \
     musl-dev \
     python3-dev \
     libffi-dev \
-    openssl-dev
+    openssl-dev \
+    rust \    # 添加 Rust
+    cargo     # 添加 Cargo
 
 # 复制依赖文件
 COPY requirements.txt .
+
+RUN pip install --no-cache-dir --upgrade pip setuptools wheel
 
 # 安装 Python 依赖
 RUN pip install --no-cache-dir --user -r requirements.txt
