@@ -1,6 +1,6 @@
 # 构建阶段
 # 使用 Python 3.11 和 Debian Bullseye (glibc-based) 作为基础镜像
-FROM python:3.11-slim-bullseye AS builder
+FROM python:3.11-slim-bookworm AS builder
 
 WORKDIR /build
 
@@ -26,7 +26,7 @@ RUN pip install --no-cache-dir --user -r requirements.txt
 
 # 运行阶段
 # 同样使用 Python 3.11 和 Debian Bullseye
-FROM python:3.11-slim-bullseye
+FROM python:3.11-slim-bookworm
 
 WORKDIR /app
 
