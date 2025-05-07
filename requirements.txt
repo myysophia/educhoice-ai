@@ -1,7 +1,8 @@
-vanna==0.7.9
-openai==0.28.1
-chromadb==0.4.18
+vanna==0.7.9  
+openai==1.77.0   
+chromadb==0.4.24
 pyyaml==6.0.1
-flask==3.0.0
+flask==3.0.2  
 pymysql==1.1.0
-python-dotenv==1.0.0
+python-dotenvr=1.0.1
+numpy<2.0
