@@ -2,5 +2,11 @@
 *
 # 不忽略 .py 文件
 !*.py
+!Dockerfile
 # 不忽略 .gitignore
 !.gitignore
+!requirements.txt
+!.github/
+!.github/workflows/
+!.github/workflows/*.yml
+!README.md
