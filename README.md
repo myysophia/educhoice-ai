@@ -1,5 +1,9 @@
 # EDU Choice - 基于AI的高考志愿填报智能问答系统
 
+[demo地址](https://educhoice.agentgo.tech)
+
+<img width="1489" alt="image" src="https://github.com/user-attachments/assets/979a6a70-3b94-4f18-8f74-4047f17f34dd" />
+
 ## 技术架构
 - **Web服务框架**: `Flask`
 - **向量数据库**: `ChromaDB`（用于数据存储与检索）
