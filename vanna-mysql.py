@@ -1,16 +1,16 @@
-import logging  
-import os  
-from datetime import datetime  
-from flask import request  
-import json  
-from vanna.base import VannaBase
+import logging
+import os
+from datetime import datetime
+from flask import request
+import json
+from openai import OpenAI
 from vanna.chromadb import ChromaDB_VectorStore
 from vanna.openai import OpenAI_Chat
 from vanna.qianwen import QianWenAI_Chat
 
 from vanna.flask import VannaFlaskApp
 import yaml
-import os
+from auth import SimplePassword
 
 logging.basicConfig(level=logging.INFO)  
 
@@ -22,15 +22,70 @@ def load_config():
 
 config = load_config()
 
-# class MyVanna(ChromaDB_VectorStore, OpenAI_Chat):
-#     def __init__(self, config=None):
-#         ChromaDB_VectorStore.__init__(self, config=config)
-#         OpenAI_Chat.__init__(self, config=config)
+vector_store_config = config.get('vector_store', {})
+mode = config.get('mode', 'openai-compatible')
 
-class MyVanna(ChromaDB_VectorStore, QianWenAI_Chat):
+if mode == 'qwen':
+    llm_config = config.get('qwen', {})
+    if not llm_config:
+        raise ValueError('模式设置为 qwen，但未找到 qwen 配置')
+else:
+    llm_config = config.get('llm')
+    if llm_config is None:
+        llm_config = config.get('openai', {})
+        if llm_config:
+            logging.info('检测到 openai 配置，默认映射到本地/兼容 LLM 配置')
+    if not llm_config:
+        raise ValueError('未找到 llm/openai 配置，请检查 config.yaml')
+
+myvanna_cfg = {'vector_store': vector_store_config}
+if mode == 'qwen':
+    myvanna_cfg['qwen'] = llm_config
+else:
+    myvanna_cfg['llm'] = llm_config
+
+class MyVanna(ChromaDB_VectorStore, (QianWenAI_Chat if mode == 'qwen' else OpenAI_Chat)):
     def __init__(self, config=None):
-        ChromaDB_VectorStore.__init__(self, config=config)
-        QianWenAI_Chat.__init__(self, config=config)
+        if config is None:
+            config = {}
+
+        vector_cfg = dict(config.get('vector_store', {}) or {})
+        backend_cfg = dict(config.get('llm', {})) if mode != 'qwen' else dict(config.get('qwen', {}))
+
+        if 'path' not in vector_cfg:
+            vector_cfg['path'] = '.'
+
+        if mode != 'qwen' and not backend_cfg.get('model'):
+            raise ValueError('未配置 llm.model，无法确定使用的本地模型名称')
+
+        # 初始化向量检索
+        ChromaDB_VectorStore.__init__(self, config=vector_cfg)
+
+        if mode == 'qwen':
+            QianWenAI_Chat.__init__(self, config=backend_cfg)
+        else:
+            client_kwargs = {}
+            api_key = backend_cfg.get('api_key') or os.getenv('OPENAI_API_KEY') or 'EMPTY'
+            client_kwargs['api_key'] = api_key
+
+            base_url = backend_cfg.get('base_url') or os.getenv('OPENAI_BASE_URL')
+            if base_url:
+                client_kwargs['base_url'] = base_url
+
+            headers = backend_cfg.get('headers')
+            if headers:
+                client_kwargs['default_headers'] = headers
+
+            client = OpenAI(**client_kwargs)
+
+            chat_cfg = {
+                'model': backend_cfg.get('model'),
+                'temperature': backend_cfg.get('temperature', 0.2),
+            }
+            if backend_cfg.get('max_tokens') is not None:
+                chat_cfg['max_tokens'] = backend_cfg['max_tokens']
+
+            OpenAI_Chat.__init__(self, client=client, config=chat_cfg)
 
     def add_documentation_to_prompt(self, initial_prompt, documentation_list, max_tokens=14000):
         """在拼装提示词前过滤掉空文档或异常对象"""
@@ -58,7 +113,7 @@ class MyVanna(ChromaDB_VectorStore, QianWenAI_Chat):
 
         return len(string) / 4
 
-vn = MyVanna(config={'api_key': config['openai']['api_key'], 'model': config['openai']['model']})
+vn = MyVanna(config=myvanna_cfg)
 
 # class MyVanna(ChromaDB_VectorStore, GoogleGeminiChat):
 #     def __init__(self, config=None):
@@ -76,9 +131,9 @@ vn.connect_to_mysql(
     port=db_config['port']
 )
 
-vn.remove_collection("sql")  
+# vn.remove_collection("sql")  
 
-vn.remove_collection("documentation")
+# vn.remove_collection("documentation")
 
 # 设置环境变量避免tokenizers警告
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'

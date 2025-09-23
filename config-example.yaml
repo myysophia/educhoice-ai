@@ -1,0 +1,23 @@
+mode: llm
+
+vector_store:
+  path: './'
+  n_results: 10
+
+llm:
+  base_url: 'https://xx.agentgo.tech/v1/'
+  model: 'deepseek-r1-0528-qwen3-8b'
+  api_key: 'gpustack_3a41c91c76ef00fa_5f653db445405081454f696478672868'
+  temperature: 0.2
+
+qwen:
+  api_key: ''
+  model: 'qwen-plus-latest'
+  temperature: 0.3
+
+database:
+  host: '1.94.15.215'
+  dbname: 'test_env'
+  user: 'test'
+  password: 'test@123!@#'
+  port: 3066

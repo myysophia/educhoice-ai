@@ -10,3 +10,4 @@
 !.github/workflows/
 !.github/workflows/*.yml
 !README.md
+!config-example.yaml
