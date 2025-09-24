@@ -907,12 +907,11 @@ app = LoggingVannaFlaskApp(vn,
                 logo="https://pub-10375556b89a45e0a56aff68854a2214.r2.dev/%E9%97%AE%E6%95%B0%E6%99%BA%E8%83%BD%E4%BD%93.jpg", 
                 summarization=False,  
                 ask_results_correct=True,  
-                debug=True,  # 这个设置Vanna的debug，不是Flask的  
+                debug=True,  
                 sql=True,  
                 suggested_questions=True,  
                 show_training_data=True,  
                 function_generation=True  
                 )  
   
-# 显式设置Flask的debug模式  
 app.run(host="0.0.0.0", port=8084, debug=True)
