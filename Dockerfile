@@ -46,8 +46,14 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl \
 # Python 3.11 下 --user 安装的路径
 COPY --from=builder /root/.local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 
-# 复制应用代码与配置
-COPY . .
+# 复制应用代码
+COPY vanna-mysql.py ./
+COPY auth.py ./
+COPY templates ./templates
+COPY static ./static
+COPY sql ./sql
+
+RUN mkdir -p logs
 
 EXPOSE 8084
 
