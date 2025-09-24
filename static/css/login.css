@@ -1,0 +1,153 @@
+/* 登录页面自定义样式 */
+
+/* 主体背景渐变 */
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+/* 暗色模式背景调整 */
+.dark body {
+    background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+}
+
+/* 登录卡片样式 */
+.bg-white {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+.dark .bg-white {
+    background: rgba(45, 55, 72, 0.95);
+}
+
+/* 输入框样式 */
+input[type="email"],
+input[type="password"] {
+    transition: all 0.3s ease;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* 按钮样式 */
+button[type="submit"] {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    transition: all 0.3s ease;
+}
+
+button[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Logo样式 */
+img.mx-auto {
+    border-radius: 12px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease;
+}
+
+img.mx-auto:hover {
+    transform: scale(1.05);
+}
+
+/* 演示账户信息卡片 */
+.bg-blue-50 {
+    background: rgba(219, 234, 254, 0.8);
+    backdrop-filter: blur(10px);
+}
+
+.dark .bg-blue-50 {
+    background: rgba(30, 58, 138, 0.2);
+}
+
+/* 错误图标动画 */
+svg.h-5.w-5.text-red-500 {
+    animation: shake 0.5s ease-in-out;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+/* 加载动画 */
+.loading {
+    position: relative;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-top-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* 响应式设计 */
+@media (max-width: 640px) {
+    .max-w-md {
+        margin: 1rem;
+    }
+
+    img.mx-auto {
+        height: 16px;
+        width: auto;
+    }
+
+    h2.text-3xl {
+        font-size: 1.5rem;
+    }
+}
+
+/* 表单验证状态 */
+input:invalid {
+    border-color: #ef4444;
+}
+
+input:valid {
+    border-color: #10b981;
+}
+
+/* 记住我复选框样式 */
+input[type="checkbox"]:checked + label {
+    color: #3b82f6;
+    font-weight: 600;
+}
+
+/* 链接样式 */
+a.text-blue-600:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+}
+
+/* 淡入动画 */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.max-w-md {
+    animation: fadeIn 0.6s ease-out;
+}
+
+/* 卡片悬停效果 */
+.shadow-xl:hover {
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}

@@ -9,6 +9,10 @@
 !.github/
 !.github/workflows/
 !.github/workflows/*.yml
+!static
+!static/**
+!templates
+!templates/**
 !README.md
 !config-example.yaml
 !chroma.sqlite3
