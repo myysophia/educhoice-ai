@@ -16,7 +16,19 @@ logging.basicConfig(level=logging.INFO)
 
 
 def load_config():
-    config_path = os.path.join(os.path.dirname(__file__), 'config.yaml')
+    base_dir = os.path.dirname(__file__)
+    config_path = os.environ.get('CONFIG_PATH', os.path.join(base_dir, 'config.yaml'))
+
+    if os.path.isdir(config_path):
+        candidate = os.path.join(config_path, 'config.yaml')
+        if os.path.isfile(candidate):
+            config_path = candidate
+        else:
+            raise ValueError(f"配置路径 {config_path} 指向目录，且未找到 config.yaml 文件")
+
+    if not os.path.isfile(config_path):
+        raise FileNotFoundError(f"未找到配置文件：{config_path}")
+
     with open(config_path, 'r') as file:
         return yaml.safe_load(file)
 
