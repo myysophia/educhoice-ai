@@ -46,7 +46,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl \
 # Python 3.11 下 --user 安装的路径
 COPY --from=builder /root/.local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 
-COPY vanna-mysql.py .
+# 复制应用代码与配置
+COPY . .
 
 EXPOSE 8084
 
