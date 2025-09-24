@@ -51,8 +51,6 @@ COPY vanna-mysql.py ./
 COPY auth.py ./
 COPY templates ./templates
 COPY static ./static
-COPY sql ./sql
-
 RUN mkdir -p logs
 
 EXPOSE 8084
