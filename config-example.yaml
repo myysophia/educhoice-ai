@@ -16,8 +16,8 @@ qwen:
   temperature: 0.3
 
 database:
-  host: '1.94.15.215'
+  host: ''
   dbname: 'test_env'
   user: 'test'
-  password: 'test@123!@#'
+  password: ''
   port: 3066
