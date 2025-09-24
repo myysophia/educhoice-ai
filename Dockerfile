@@ -39,7 +39,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends curl \
     && rm -rf /var/lib/apt/lists/* \
     && mkdir -p /root/.cache/chroma \
     && curl -fsSL "https://pub-10375556b89a45e0a56aff68854a2214.r2.dev/chorma.tar.gz" -o /tmp/chroma.tar.gz \
-    && tar -xzf /tmp/chroma.tar.gz -C /root/.cache/chroma/ \
+    && tar -xzf /tmp/chroma.tar.gz -C /root/.cache/ \
     && rm /tmp/chroma.tar.gz
 
 # 从构建阶段复制安装好的 Python 包
