@@ -11,3 +11,12 @@
 !.github/workflows/*.yml
 !README.md
 !config-example.yaml
+!chroma.sqlite3
+!bc3e4661-ee79-4b6d-95cc-b66eee1fde16/
+!bc3e4661-ee79-4b6d-95cc-b66eee1fde16/**
+!81ef10bf-9cc4-4221-9e1f-d3383429233b/
+!81ef10bf-9cc4-4221-9e1f-d3383429233b/**
+!c6d38ad7-30cc-4710-9f42-0f167b637c8f/
+!c6d38ad7-30cc-4710-9f42-0f167b637c8f/**
+!16a848ae-c489-430d-9c06-2842e0810e16/
+!16a848ae-c489-430d-9c06-2842e0810e16/**
