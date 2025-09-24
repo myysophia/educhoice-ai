@@ -34,6 +34,14 @@ WORKDIR /app
 # 如果遇到运行时链接错误, 可以取消注释下一行来确保它被安装。
 # RUN apt-get update && apt-get install -y --no-install-recommends libstdc++6 && rm -rf /var/lib/apt/lists/*
 
+# 安装下载工具并预置 Chroma ONNX 模型缓存，方便在离线环境直接使用
+RUN apt-get update && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/* \
+    && mkdir -p /root/.cache/chroma \
+    && curl -fsSL "https://pub-10375556b89a45e0a56aff68854a2214.r2.dev/chorma.tar.gz" -o /tmp/chroma.tar.gz \
+    && tar -xzf /tmp/chroma.tar.gz -C /root/.cache/chroma/ \
+    && rm /tmp/chroma.tar.gz
+
 # 从构建阶段复制安装好的 Python 包
 # Python 3.11 下 --user 安装的路径
 COPY --from=builder /root/.local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
